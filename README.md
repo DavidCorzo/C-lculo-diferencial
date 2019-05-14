@@ -1,2 +1,2 @@
-# C-lculo-diferencial
+# Cálculo-diferencial
 Computational Calculus Experiments
