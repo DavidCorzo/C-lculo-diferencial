@@ -1,219 +1,102 @@
-<<<<<<< HEAD
+#IMPORTAR LIBRERÍAS
+#Para importar las funciones básicas como sum() etcétera
 import math
+#Para importar colores de impresión
 from colorama import init, Fore, Back, Style
 init(convert=True)
-#recibir numero de rectangulos
-#recibir intervalos
-#calcular f(Xi) y Area
+#Para hacer el input de la función matemática por el usuario
+from sympy import var
+from sympy import sympify
 
-valid = 'no'
 
-#En estas instrucciones el programa le pide los inputs al usuario
-while valid == 'no':
-    print(Fore.WHITE + "Ingrese el primer intervalo (" + Fore.RED + "a" + Fore.WHITE + ")")
-    a = float(input(" → "))
-    print(Fore.WHITE + "Ingrese el segundo intervalo (" + Fore.RED + "b" + Fore.WHITE + ")")
-    b = float(input(" → "))
-    if a < b:
-        valid = 'yes'
-    else:
-        print(Fore.RED + "MATH ERROR: A MUST BE LESS THAN B " + Fore.WHITE)
-        valid = 'no'
-    #print(Fore.WHITE + "Enter number of rectangles: ")
-    # n = int(input(" → "))
-    inputOfn = input("Ingrese los diferentes valores de 'n' en una lista separada por espacios: → ")
+    
+#definicion de funciones
+def iteracionesDeXi(n,Xi, deltaX, SimgmaArea,inputDelUsuario):
+    '''Esta funcion permite no repetir código que anteriormente estaba repetido como 3 diferentes operaciones for, esta función economiza líneas de código.'''
+    for item in range(n):
+        Xi = Xi + deltaX
+        SimgmaArea = SimgmaArea + float(funcion(inputDelUsuario, Xi))
+    Area = SimgmaArea * deltaX
+    return Area
+
+#Definición de funciones matemáticas
+def funcion(inputDelUsuario,xi):
+    '''Esta función permite convertir el input del usuario en una funcion como tal capaz de ser interpretada por python como código matemático funcional.'''
+    x = var('x')
+    conversionAMatematicas = sympify(inputDelUsuario)
+    operaciones = conversionAMatematicas.subs(x,xi)
+    return operaciones
+
+
+
+def main():
+    #INPUT MATEMÁTICO POR EL USUARIO
+    validFunction = 'no'
+    while validFunction == 'no':
+        inputDelUsuario = input('Ingresar su función matemática: → ')
+        validFunction = input('¿Has ingresado tu función correctamente? ("si","no"): → ')
+        if validFunction == 'no':
+            print("Input de nuevo.")
+            print("_________________________________________________________________________________________________________________________________________________________________")
+
+    #En estas instrucciones el programa le pide los inputs al usuario, dichos inputs son únicamente a,b,n
+    validABN = 'no'
+    while validABN == 'no':
+        #El primer intervalo es 'a'
+        print(Fore.WHITE + "Ingrese el primer intervalo (" + Fore.RED + "a" + Fore.WHITE + ")")
+        a = float(input(" → "))
+        #El segundo intervalo es 'b'
+        print(Fore.WHITE + "Ingrese el segundo intervalo (" + Fore.RED + "b" + Fore.WHITE + ")")
+        b = float(input(" → "))
+        #'a' debe ser menor que 'b'
+        if a < b:
+            validABN = 'yes'
+        else:
+            print(Fore.RED + "ERROR MATEMÁTICO: EL PRIMER INTERVALO DEBE DE SER MAYOR QUE EL SEGUNDO" + Fore.WHITE)
+            validABN = 'no'
+    validN = 'no'
+    while validN == 'no':
+        inputOfn = input("Ingrese los diferentes valores de 'n' en una lista separada por espacios: → ")
+        validN = input('¿Ha ingresado "n" correctamente? ("si","no"): → ')
+        if validN == 'no':
+            print("Input de nuevo.")
+            print("_________________________________________________________________________________________________________________________________________________________________")
+    
     Listofn = inputOfn.split()
-    
 
-#Escriba la función y=f(x) bajo la curva
-def function(x):
-    '''escribe la función =f(x)y'''
-    fdeX = float(x)**3+4
- 
-    return fdeX
+    #Imprime el header
+    print("| " + "Rectángulos" + Fore.CYAN + " | Izquierda  " +  Fore.GREEN + "| Centro    " + Fore.BLUE + "| Derecha    |" + Fore.WHITE  )
 
+    #defino la variable iteracion esta es la variable contador
+    iteration = 0
+    for item in Listofn:
+        #Ancho de cada rectángulo
+        n = int(Listofn[iteration])
+        deltaX = float(b-a)/n
 
-##Imprime el ancho de cada rectángulo
-#print("Número de Rectángulos: → ",  n)
 
-iteration = 0
+        #Inicialice la suma del Area a cero
+        SigmaArea_1=0
+        SigmaArea_2=0
+        SigmaArea_3=0
 
-print("| " + "Rectángulos" + Fore.CYAN + " | Izquierda  " +  Fore.GREEN + "| Centro    " + Fore.BLUE + "| Derecha    |" + Fore.WHITE  )
 
-for item in Listofn:
-    #Ancho de cada rectángulo
-    n = int(Listofn[iteration])
-    deltaX = float(b-a)/n
+        #primer número muestra
+        xi_1 = a
+        xi_2 = a - deltaX
+        xi_3 = a - 0.5 * deltaX
 
+        #funcion de iteraciones de cada fórmula de Xi
+        Area_1 = iteracionesDeXi(n,xi_1,deltaX,SigmaArea_1,inputDelUsuario)
+        Area_2 = iteracionesDeXi(n,xi_2,deltaX,SigmaArea_2,inputDelUsuario)
+        Area_3 = iteracionesDeXi(n,xi_3,deltaX,SigmaArea_3,inputDelUsuario)
 
-    #Inicialice la suma del Area a cero
-    SigmaArea_1=0
-    SigmaArea_2=0
-    SigmaArea_3=0
+        #itero para cambiar el valor de n
+        iteration = iteration + 1
 
+        
+        print("| ",format(n,"6d") ,"    | ",format(Area_2, "2.6f"), "|" ,format(Area_3, "2.6f"), "|" ,format(Area_1,"2.6f"), " |")
 
-    #primer número muestra
-    xi_1 = a
-    xi_2 = a - deltaX
-    xi_3 = a - 0.5 * deltaX
 
-    for item in range(n):
-        # numero muestra
-        xi_1 = xi_1 + deltaX
-        areaActual = float(function(xi_1)) 
-        SigmaArea_1 = SigmaArea_1 + areaActual
-    Area_1 = SigmaArea_1 * deltaX
-
-    for item in range(n):
-        # numero muestra
-        xi_2 = xi_2 + deltaX
-        SigmaArea_2 = SigmaArea_2 + float(function(xi_2))
-    Area_2 = SigmaArea_2 * deltaX
-
-    for item in range(n):
-        # numero muestra
-        xi_3 = xi_3 + deltaX
-        areaActual = float(function(xi_3))
-        SigmaArea_3 = SigmaArea_3 + areaActual 
-    Area_3 = SigmaArea_3 * deltaX
-
-    iteration = iteration + 1
-
-    
-    print("| ",format(n,"6d") ,"    | ",format(Area_2, "2.6f"), "|" ,format(Area_3, "2.6f"), "|" ,format(Area_1,"2.6f"), " |")
-
-=======
-import math
-from colorama import init, Fore, Back, Style
-init(convert=True)
-#recibir numero de rectangulos
-#recibir intervalos
-#calcular f(Xi) y Area
-
-valid = 'no'
-
-#En estas instrucciones el programa le pide los inputs al usuario
-while valid == 'no':
-    print(Fore.WHITE + "Ingrese el primer intervalo (" + Fore.RED + "a" + Fore.WHITE + ")")
-    a = float(input(" → "))
-    print(Fore.WHITE + "Ingrese el segundo intervalo (" + Fore.RED + "b" + Fore.WHITE + ")")
-    b = float(input(" → "))
-    if a < b:
-        valid = 'yes'
-    else:
-        print(Fore.RED + "MATH ERROR: A MUST BE LESS THAN B " + Fore.WHITE)
-        valid = 'no'
-    #print(Fore.WHITE + "Enter number of rectangles: ")
-    # n = int(input(" → "))
-    Listofn = [5,10,20,40,80]
-
-
-#Escriba la función y=f(x) bajo la curva
-def function(x):
-    '''escribe la función =f(x)y'''
-    fdeX = float(x)**3+4
- 
-    return fdeX
-
-#Largo del intervalo
-intervalo = b - a
-
-
-##Imprime el ancho de cada rectángulo
-#print("Número de Rectángulos: → ",  n)
-
-iteration = 0
-
-print("| " + "Rectángulos" + Fore.CYAN + " | Izquierda  " +  Fore.GREEN + "| Centro    " + Fore.BLUE + "| Derecha    |" + Fore.WHITE  )
-
-for item in Listofn:
-    #Ancho de cada rectángulo
-    n = Listofn[iteration]
-    deltaX = float(b-a)/n
-
-
-    #Inicialice la suma del Area a cero
-    SigmaArea_1=0
-    SigmaArea_2=0
-    SigmaArea_3=0
-
-
-    #primer número muestra
-    xi_1 = a
-    xi_2 = a - deltaX
-    xi_3 = a - 0.5 * deltaX
-
-    for item in range(n):
-        # numero muestra
-        xi_1 = xi_1 + deltaX
-        areaActual = float(function(xi_1)) 
-        SigmaArea_1 = SigmaArea_1 + areaActual
-    Area_1 = SigmaArea_1 * deltaX
-
-    for item in range(n):
-        # numero muestra
-        xi_2 = xi_2 + deltaX
-        areaActual = float(function(xi_2))
-        SigmaArea_2 = SigmaArea_2 + areaActual
-    Area_2 = SigmaArea_2 * deltaX
-
-    for item in range(n):
-        # numero muestra
-        xi_3 = xi_3 + deltaX
-        areaActual = float(function(xi_3))
-        SigmaArea_3 = SigmaArea_3 + areaActual 
-    Area_3 = SigmaArea_3 * deltaX
-
-    iteration = iteration + 1
-
-    
-    print("| ",format(n,"6d") ,"    | ",format(Area_2, "2.6f"), "|" ,format(Area_3, "2.6f"), "|" ,format(Area_1,"2.6f"), " |")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# multiplicationOfFdeXandFdeXi = []
-
-# iteration_1 = int(0)
-# for items in listsOfX:
-#     multiplicationOfFdeXandFdeXi.append(listsOfX[iteration_1] * listofFdeXi[iteration_1])
-#     iteration = iteration + int(1)
-# print(multiplicationOfFdeXandFdeXi)
-
-# sigmaArea = sum(multiplicationOfFdeXandFdeXi)
-
-
-
-# print("La suma de areas es", sigmaArea)
-
-
-
-
-
->>>>>>> 2a95047def53cc8d780d7159f16d64d030a0f9d4
+if __name__ == "__main__":
+    main()
